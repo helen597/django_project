@@ -13,7 +13,7 @@ def validate_price(value):
 
 # Create your models here.
 class Product(models.Model):
-    objects = None
+
     name = models.CharField(max_length=100, verbose_name='Наименование')
     description = models.TextField(max_length=300, verbose_name='Описание')
     image = models.ImageField(upload_to='products/', verbose_name='Изображение', null=True, blank=True)
@@ -33,7 +33,7 @@ class Product(models.Model):
 
 
 class Category(models.Model):
-    objects = None
+
     name = models.CharField(max_length=100, verbose_name='Наименование')
     description = models.TextField(max_length=300, verbose_name='Описание')
 
