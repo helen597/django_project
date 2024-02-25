@@ -1,9 +1,17 @@
 {% extends "catalog/base.html" %}
+{% load mediapath_tag %}
 {% block content %}
 <div class="col-12">
-    {% for product in object_list %}
+    {% for object in object_list %}
         <div class="row">
-            <p>{{ object.name }}</p>
+            <div class="card">
+                <img src="{% mediapath object.photo %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ object.category }} {{ object.name }}</h5>
+                    <p class="card-text">{{ object.description }}</p>
+                    <a href="{% url 'catalog:product' object.pk %}" class="btn btn-primary">Подробнее</a>
+                </div>
+            </div>
         </div>
     {% endfor %}
 </div>
