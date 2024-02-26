@@ -5,7 +5,7 @@
     {% for object in object_list %}
         <div class="row">
             <div class="card">
-                <img src="{% mediapath object.photo %}" class="card-img-top" alt="...">
+                <img src="{% mediapath object.image %}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ object.category }} {{ object.name }}</h5>
                     <p class="card-text">{{ object.description }}</p>
