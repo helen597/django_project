@@ -8,7 +8,7 @@
                 <img width="150" src="{% mediapath object.image %}" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ object.category }} {{ object.name }}</h5>
-                    <p class="card-text">{{ object.description }}</p>
+                    <p class="card-text">{{ object.description | slice:100 }}...</p>
                     <a href="{% url 'catalog:product' object.pk %}" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>
