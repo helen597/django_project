@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from blog.models import Blog
 
@@ -24,3 +24,16 @@ class BlogCreateView(CreateView):
     model = Blog
     success_url = reverse_lazy('blog:blog_list')
     fields = '__all__'
+
+
+class BlogUpdateView(UpdateView):
+    model = Blog
+    fields = ('title', 'content')
+
+    def get_success_url(self):
+        return reverse_lazy('blog:blog_detail', kwargs={'pk': self.object.pk})
+
+
+class BlogDeleteView(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('blog:blog_list')

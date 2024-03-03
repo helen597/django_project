@@ -9,6 +9,8 @@
         <p>{{ object.content }}</p>
         <p>{{ object.image }}</p>
         <p>Количество просмотров: {{ object.view_count }}</p>
+        <a href="{% url 'blog:blog_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
+        <a href="{% url 'blog:blog_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
     </div>
 </div>
 {% endblock %}

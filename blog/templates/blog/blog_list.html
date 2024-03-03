@@ -9,7 +9,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ object.title }}</h5>
                     <p class="card-text">{{ object.content | slice:100 }}...</p>
-                    <a href="{% url 'blog:blog' object.pk %}" class="btn btn-primary">Подробнее</a>
+                    <a href="{% url 'blog:blog_detail' object.pk %}" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>
         </div>
