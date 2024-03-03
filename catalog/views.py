@@ -1,26 +1,34 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
 from catalog.models import Product
 
 
 # Create your views here.
-def home(request):
-    context = {'object_list': Product.objects.all()}
-    return render(request, 'catalog/home.html', context)
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/home.html'
 
 
-def contacts(request):
-    if request.method == 'POST':
-        # в переменной request хранится информация о методе, который отправлял пользователь
-        name = request.POST.get('name')
-        # а также передается информация, которую заполнил пользователь
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f"{name}({phone}): {message}")
-    return render(request, 'catalog/contacts.html')
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product.html'
 
 
-def product(request, pk):
-    product = Product.objects.get(pk=pk)
-    context = {'object': product}
-    return render(request, 'catalog/product.html', context)
+class ContactsTemplateView(TemplateView):
+    template_name = 'catalog/contacts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+# def contacts(request):
+#     if request.method == 'POST':
+#         # в переменной request хранится информация о методе, который отправлял пользователь
+#         name = request.POST.get('name')
+#         # а также передается информация, которую заполнил пользователь
+#         phone = request.POST.get('phone')
+#         message = request.POST.get('message')
+#         print(f"{name}({phone}): {message}")
+#     return render(request, 'catalog/contacts.html')
