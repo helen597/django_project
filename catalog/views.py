@@ -1,8 +1,8 @@
-from django import forms
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
+from catalog.forms import ProductForm
 from catalog.models import Product
 
 
@@ -15,14 +15,6 @@ class ProductListView(ListView):
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
-
-
-class ProductForm(forms.ModelForm):
-    # Наследуемся от специального класса форм, который предоставляет
-    # весь необходимый функционал, который нужно настроить
-    class Meta:
-        model = Product
-        exclude = ('created_at', 'updated_at', )
 
 
 class ProductCreateView(CreateView):
