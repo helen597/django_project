@@ -1,7 +1,8 @@
 {% extends "catalog/base.html" %}
 {% load mediapath_tag %}
 {% block content %}
-<div class="col-12">
+<div class="col-12 mb-5">
+    <a class="p-2 btn btn-outline-primary" href="/catalog/create/">Добавить товар</a>
     {% for object in object_list %}
         <div class="row">
             <div class="card">
@@ -9,7 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ object.category }} {{ object.name }}</h5>
                     <p class="card-text">{{ object.description | slice:100 }}...</p>
-                    <a href="{% url 'catalog:product' object.pk %}" class="btn btn-primary">Подробнее</a>
+                    <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>
         </div>
