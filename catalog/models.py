@@ -44,3 +44,19 @@ class Category(models.Model):
         verbose_name = 'категория'
         verbose_name_plural = 'категории'
         ordering = ('name',)
+
+
+class Version(models.Model):
+
+    number = models.IntegerField(default=1, verbose_name='Номер')
+    name = models.CharField(max_length=100, verbose_name='Название')
+    is_active = models.BooleanField(default=True, verbose_name='Текущая')
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, verbose_name='Продукт')
+
+    def __str__(self):
+        return f'{self.number}: {self.name}'
+
+    class Meta:
+        verbose_name = 'версия'
+        verbose_name_plural = 'версии'
+        ordering = ('number',)
