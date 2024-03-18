@@ -54,6 +54,11 @@ class ProductUpdateView(UpdateView):
             return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:product_list')
+
+
 class ContactsTemplateView(TemplateView):
     template_name = 'catalog/contacts.html'
 
