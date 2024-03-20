@@ -34,17 +34,17 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
-        products = Product.objects.all()
+        product = self.get_object()
+        versions = Version.objects.filter(product=product)
+        # context_data['versions'] = versions
+        active_version = versions.filter(is_active=True).last()
 
-        for product in products:
-            versions = Version.objects.filter(product=product)
-            active_versions = versions.filter(is_active=True)
-            if active_versions:
-                product.active_version = active_versions.last().name
-            else:
-                product.active_version = 'Нет активной версии'
+        if active_version:
+            product.active_version = active_version.name
+        else:
+            product.active_version = 'Нет активной версии'
 
-        context_data['object_list'] = products
+        context_data['object'] = product
         return context_data
 
 
