@@ -37,9 +37,9 @@ class ProductDetailView(DetailView):
 
         for product in products:
             versions = Version.objects.filter(product=product)
-            active_version = versions.filter(is_active=True)
-            if active_version:
-                product.active_version = active_version.name
+            active_versions = versions.filter(is_active=True)
+            if active_versions:
+                product.active_version = active_versions.last().name
             else: product.active_version = 'Нет активной версии'
 
         context_data['products'] = products
