@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ object.category }} {{ object.name }}</h5>
                     <p class="card-text">{{ object.description | slice:100 }}...</p>
+                    <p>Активная версия: {{ object.active_version }}</p>
                     <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>

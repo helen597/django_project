@@ -12,14 +12,38 @@ class ProductListView(ListView):
     model = Product
     template_name = 'catalog/product_list.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        products = Product.objects.all()
+
+        for product in products:
+            versions = Version.objects.filter(product=product)
+            active_version = versions.filter(is_active=True)
+            if active_version:
+                product.active_version = active_version.name
+            else: product.active_version = 'Нет активной версии'
+
+        context_data['products'] = products
+        return context_data
 
 
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        products = Product.objects.all()
+
+        for product in products:
+            versions = Version.objects.filter(product=product)
+            active_version = versions.filter(is_active=True)
+            if active_version:
+                product.active_version = active_version.name
+            else: product.active_version = 'Нет активной версии'
+
+        context_data['products'] = products
+        return context_data
 
 
 class ProductCreateView(CreateView):

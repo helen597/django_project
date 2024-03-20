@@ -3,17 +3,20 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row">
-        <img src="{% mediapath object.image %}">
-        <h2>{{ object.name }}</h2>
-        <p>Характеристики: {{ object.description }}</p>
-        <p>Категория: {{ object.category }}</p>
-        <br>
-        <p>{{ object.created_at }}</p>
-        <p>{{ object.updated_at }}</p>
-        <p>{{ object.image }}</p>
-        <p>Цена:  <h5>{{ object.price }}</h5>  рублей. </p>
-        <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
-        <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
+        <div class="col-12">
+            <img src="{% mediapath object.image %}">
+            <h2>{{ object.name }}</h2>
+            <p>Характеристики: {{ object.description }}</p>
+            <p>Категория: {{ object.category }}</p>
+            <br>
+            <p>{{ object.created_at }}</p>
+            <p>{{ object.updated_at }}</p>
+            <p>{{ object.image }}</p>
+            <p>Активная версия: {{ object.active_version }}</p>
+            <p>Цена:  <h5>{{ object.price }}  рублей. </p>
+            <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
+            <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
+        </div>
     </div>
 </div>
 {% endblock %}
