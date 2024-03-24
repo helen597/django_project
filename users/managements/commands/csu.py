@@ -9,7 +9,9 @@ class Command(BaseCommand):
         user = User.objects.create(
             email='admin@sky.pro',
             first_name='Admin',
-            last_name='SkyPro'
+            last_name='SkyPro',
+            is_stuff=True,
+            is_superuser=True
         )
         user.set_password('admin')
         user.save()
