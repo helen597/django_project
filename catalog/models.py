@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-
+NULLABLE = {'null': True, 'blank': True}
 
 def validate_price(value):
     if value <= 0:
@@ -16,7 +16,7 @@ class Product(models.Model):
 
     name = models.CharField(max_length=100, verbose_name='Наименование')
     description = models.TextField(max_length=300, verbose_name='Описание')
-    image = models.ImageField(upload_to='products/', verbose_name='Изображение', null=True, blank=True)
+    image = models.ImageField(upload_to='products/', verbose_name='Изображение', **NULLABLE)
     category = models.ForeignKey("Category", on_delete=models.CASCADE, verbose_name='Категория')
     price = models.IntegerField(validators=[validate_price], verbose_name='Цена за покупку')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
