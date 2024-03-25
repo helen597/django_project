@@ -1,3 +1,7 @@
+import secrets
+import string
+
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.shortcuts import redirect
@@ -5,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
 from config import settings
-from users.forms import UserRegisterForm, UserProfileForm
+from users.forms import UserRegisterForm, UserProfileForm, ChangeUserPasswordForm
 from users.models import User
 import random
 
@@ -60,3 +64,29 @@ def verification_view(request, token):
         user.is_active = True
         user.save()
     return redirect('users:login')
+
+
+class RecoverPasswordView:
+    model = User
+    form_class = ChangeUserPasswordForm
+
+    def get_success_url(self):
+        return reverse_lazy('users:login')
+
+    def form_valid(self, form):
+        user = self.request.user
+        alphabet = string.ascii_letters + string.digits
+        password = "".join(secrets.choice(alphabet) for i in range(10))
+        user.password = make_password(password)
+        user.save()
+        print(password)
+        message = f"Ваш новый пароль:\n{password}"
+        print(message)
+        send_mail(
+            "Смена пароля",
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+        return super().form_valid(form)
