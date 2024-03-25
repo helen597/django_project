@@ -21,6 +21,7 @@ class Product(models.Model):
     price = models.IntegerField(validators=[validate_price], verbose_name='Цена за покупку')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Пользователь')
     # manufactured_at = models.DateField(verbose_name='Дата производства продукта', null=True, blank=True)
 
     def __str__(self):
