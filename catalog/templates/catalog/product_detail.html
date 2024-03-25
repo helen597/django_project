@@ -8,9 +8,9 @@
             <h2>{{ object.name }}</h2>
             <p>Характеристики: {{ object.description }}</p>
             <p>Категория: {{ object.category }}</p>
-            <br>
-            <p>{{ object.created_at }}</p>
-            <p>{{ object.updated_at }}</p>
+            <p>Создан: {{ object.created_at }}</p>
+            <p>Изменён:{{ object.updated_at }}</p>
+            <p>Пользователь: {{ object.owner }}</p>
             <p>{{ object.image }}</p>
             <p>Активная версия: {{ object.active_version }}</p>
             <p>Цена:  <h5>{{ object.price }}  рублей. </p>
