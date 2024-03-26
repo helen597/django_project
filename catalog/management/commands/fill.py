@@ -31,16 +31,20 @@ class Command(BaseCommand):
              'description': 'Объём: 1024 ГБ, Скорость вращения: 7200 об/мин, Буферная память: 64 МБ',
              'category': Category.objects.get(name='Диск'), 'price': 6190},
             {'name': 'SSD накопитель Kingston A400 SA400S37/480G',
-             'description': 'Объем накопителя 480 ГБ, Скорости чтения до 500 МБ/с, записи до 450 МБ/с, Интерфейс SATA III, Тип памяти 3D',
+             'description': 'Объем накопителя 480 ГБ, Скорости чтения до 500 МБ/с, записи до 450 МБ/с, Интерфейс SATA '
+                            'III, Тип памяти 3D',
              'category': Category.objects.get(name='Диск'), 'price': 3690},
             {'name': 'Оперативная память AMD Radeon R7 Performance Series R748G2606U2S-U DDR4 - 8ГБ',
-             'description': 'Объем 8 ГБ, Частота 2666 МГц, Латентность CL16, Тайминги 16-18-18-35, Форм-фактор DIMM, 288-pin',
+             'description': 'Объем 8 ГБ, Частота 2666 МГц, Латентность CL16, Тайминги 16-18-18-35, Форм-фактор DIMM, '
+                            '288-pin',
              'category': Category.objects.get(name='Модуль оперативной памяти'), 'price': 1490},
             {'name': 'Видеокарта GIGABYTE NVIDIA GeForce RTX 3060',
-             'description': 'Память 12 ГБ GDDR6, 15000 МГц; 192 bit, Интерфейс PCI-E 4.0, Разъемы Display Port х 2, HDMI х 2',
+             'description': 'Память 12 ГБ GDDR6, 15000 МГц; 192 bit, Интерфейс PCI-E 4.0, Разъемы Display Port х 2, '
+                            'HDMI х 2',
              'category': Category.objects.get(name='Видеоадаптер'), 'price': 41140},
             {'name': 'Видеокарта PowerColor AMD Radeon RX 550',
-             'description': 'Память 4 ГБ GDDR5, 6000 МГц; 128 bit, Интерфейс PCI-E 3.0, Разъемы Display Port х 1, HDMI х 1, DVI х 1',
+             'description': 'Память 4 ГБ GDDR5, 6000 МГц; 128 bit, Интерфейс PCI-E 3.0, Разъемы Display Port х 1, '
+                            'HDMI х 1, DVI х 1',
              'category': Category.objects.get(name='Видеоадаптер'), 'price': 10780},
             {'name': 'Блок питания Aerocool VX PLUS 500W',
              'description': 'Разъемы MB 20+4 pin, CPU 4+4 pin, видеокарта 6+2 pin, SATA 3 шт, Molex 3 шт',
