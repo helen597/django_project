@@ -19,7 +19,11 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
     # весь необходимый функционал, который нужно настроить
     class Meta:
         model = Product
-        exclude = ('created_at', 'updated_at', )
+        exclude = ('created_at', 'updated_at', 'owner',)
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['owner'].widget = forms.HiddenInput()
 
     def clean_name(self):
         cleaned_data = self.cleaned_data.get('name')

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -26,10 +27,12 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     success_url = reverse_lazy('blog:blog_list')
     fields = ('title', 'content', 'image',)
+    login_url = reverse_lazy('users:login')
+    redirect_field_name = "redirect_to"
 
     def form_valid(self, form):
         if form.is_valid():
@@ -39,14 +42,18 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = ('title', 'content', 'image', 'is_published',)
+    login_url = reverse_lazy('users:login')
+    redirect_field_name = "redirect_to"
 
     def get_success_url(self):
         return reverse_lazy('blog:blog_list')
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, DeleteView):
     model = Blog
     success_url = reverse_lazy('blog:blog_list')
+    login_url = reverse_lazy('users:login')
+    redirect_field_name = "redirect_to"

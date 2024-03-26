@@ -1,15 +1,14 @@
 import secrets
 import string
 
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView
-
 from config import settings
-from users.forms import UserRegisterForm, UserProfileForm, ChangeUserPasswordForm
+from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 import random
 
@@ -49,10 +48,12 @@ class RegisterView(CreateView):
         return super().form_valid(form)
 
 
-class ProfileView(UpdateView):
+class ProfileView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     success_url = reverse_lazy('users:profile')
+    login_url = reverse_lazy('users:login')
+    redirect_field_name = "redirect_to"
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -66,27 +67,46 @@ def verification_view(request, token):
     return redirect('users:login')
 
 
-class RecoverPasswordView:
-    model = User
-    form_class = ChangeUserPasswordForm
+def recover_password(request):
+    alphabet = string.ascii_letters + string.digits
+    password = "".join(secrets.choice(alphabet) for i in range(10))
+    request.user.set_password(password)
+    request.user.save()
+    message = f"Ваш новый пароль:\n{password}"
+    send_mail(
+        "Смена пароля",
+        message=message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email],
+        fail_silently=False,
+    )
+    return redirect(reverse('catalog:product_list'))
 
-    def get_success_url(self):
-        return reverse_lazy('users:login')
 
-    def form_valid(self, form):
-        user = self.request.user
-        alphabet = string.ascii_letters + string.digits
-        password = "".join(secrets.choice(alphabet) for i in range(10))
-        user.password = make_password(password)
-        user.save()
-        print(password)
-        message = f"Ваш новый пароль:\n{password}"
-        print(message)
-        send_mail(
-            "Смена пароля",
-            message=message,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[user.email],
-            fail_silently=False,
-        )
-        return super().form_valid(form)
+# class RecoverPasswordView(UpdateView):
+#     model = User
+#     form_class = ChangeUserPasswordForm
+#
+#     def get_object(self, queryset=None):
+#         return self.request.user
+#
+#     def get_success_url(self):
+#         return reverse_lazy('users:login')
+#
+#     def form_valid(self, form):
+#         user = self.request.user
+#         alphabet = string.ascii_letters + string.digits
+#         password = "".join(secrets.choice(alphabet) for i in range(10))
+#         user.password = make_password(password)
+#         user.save()
+#         print(password)
+#         message = f"Ваш новый пароль:\n{password}"
+#         print(message)
+#         send_mail(
+#             "Смена пароля",
+#             message=message,
+#             from_email=settings.EMAIL_HOST_USER,
+#             recipient_list=[user.email],
+#             fail_silently=False,
+#         )
+#         return super().form_valid(form)
