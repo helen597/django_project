@@ -14,7 +14,9 @@
             <p>{{ object.image }}</p>
             <p>Активная версия: {{ object.active_version }}</p>
             <p>Цена:  <h5>{{ object.price }}  рублей. </p>
-            <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
+            {% if perms.catalog.change_product or product.owner == request.user %}
+                <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
+            {% endif %}
             <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
         </div>
     </div>

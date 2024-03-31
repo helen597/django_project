@@ -1,4 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -12,6 +13,11 @@ from catalog.models import Product, Version
 class ProductListView(ListView):
     model = Product
     template_name = 'catalog/product_list.html'
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_published=True)
+        return queryset
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
@@ -63,12 +69,19 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:product_list')
     login_url = reverse_lazy('users:login')
     redirect_field_name = "redirect_to"
+    permission_required = ('catalog.change_product',)
+
+    def get_object(self, queryset=None):
+        super().get_object(queryset)
+        if self.object.owner == self.request.user:
+            return self.object
+        raise PermissionDenied
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
