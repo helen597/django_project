@@ -6,6 +6,7 @@ from config import settings
 
 NULLABLE = {'null': True, 'blank': True}
 
+
 def validate_price(value):
     if value <= 0:
         raise ValidationError(
@@ -16,7 +17,6 @@ def validate_price(value):
 
 # Create your models here.
 class Product(models.Model):
-
     name = models.CharField(max_length=100, verbose_name='Наименование')
     description = models.TextField(max_length=300, verbose_name='Описание')
     image = models.ImageField(upload_to='products/', verbose_name='Изображение', **NULLABLE)
@@ -24,7 +24,10 @@ class Product(models.Model):
     price = models.IntegerField(validators=[validate_price], verbose_name='Цена за покупку')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь', **NULLABLE)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь',
+                              **NULLABLE)
+    is_published = models.BooleanField(default=False, verbose_name='Опубликовано')
+
     # manufactured_at = models.DateField(verbose_name='Дата производства продукта', null=True, blank=True)
 
     def __str__(self):
@@ -34,10 +37,14 @@ class Product(models.Model):
         verbose_name = 'продукт'
         verbose_name_plural = 'продукты'
         ordering = ('name',)
+        permissions = [
+            ('set_published', 'Can publish product'),
+            ('change_description', 'Can change description'),
+            ('change_category', 'Can change category'),
+        ]
 
 
 class Category(models.Model):
-
     name = models.CharField(max_length=100, verbose_name='Наименование')
     description = models.TextField(max_length=300, verbose_name='Описание')
 
@@ -51,7 +58,6 @@ class Category(models.Model):
 
 
 class Version(models.Model):
-
     number = models.IntegerField(default=1, verbose_name='Номер')
     name = models.CharField(max_length=100, verbose_name='Название')
     is_active = models.BooleanField(default=True, verbose_name='Текущая')
