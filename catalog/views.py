@@ -17,6 +17,8 @@ class ProductListView(ListView):
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
         queryset = queryset.filter(is_published=True)
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(owner=self.request.user)
         return queryset
 
     def get_context_data(self, *args, **kwargs):
@@ -69,17 +71,16 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:product_list')
     login_url = reverse_lazy('users:login')
     redirect_field_name = "redirect_to"
-    permission_required = ('catalog.change_product',)
 
     def get_object(self, queryset=None):
         super().get_object(queryset)
-        if self.object.owner == self.request.user:
+        if self.object.owner == self.request.user or self.request.user.has_perm('Catalog.change_product'):
             return self.object
         raise PermissionDenied
 
