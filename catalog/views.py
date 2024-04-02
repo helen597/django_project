@@ -80,7 +80,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        if self.object.owner == self.request.user or self.request.user.has_perm('Catalog.change_product'):
+        if self.object.owner == self.request.user or self.request.user.has_perm('catalog.change_product'):
             return self.object
         raise PermissionDenied
 
@@ -109,7 +109,7 @@ class ProductModerationView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
     model = Product
     form_class = ProductModerationForm
     template_name = 'catalog/product_form.html'
-    permission_required = ('Catalog.set_published', 'Catalog.change_description', 'Catalog.change_category',)
+    permission_required = ('catalog.set_published', 'catalog.change_description', 'catalog.change_category',)
 
     def get_success_url(self):
         return reverse_lazy('catalog:product_detail', kwargs={'pk': self.object.pk})
