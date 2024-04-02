@@ -16,8 +16,11 @@
             <p>Цена:  <h5>{{ object.price }}  рублей. </p>
             {% if perms.catalog.change_product or product.owner == request.user %}
                 <a href="{% url 'catalog:product_update' object.pk %}" class="btn btn-outline-warning">Изменить</a>
+                <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
             {% endif %}
-            <a href="{% url 'catalog:product_delete' object.pk %}" class="btn btn-outline-danger">Удалить</a>
+            {% if perms.catalog.set_published and perms.catalog.change_description and perms.catalog.change_category %}
+                <a href="{% url 'catalog:product_moderation' object.pk %}" class="btn btn-outline-warning">Проверить и опубликовать</a>
+            {% endif %}
         </div>
     </div>
 </div>

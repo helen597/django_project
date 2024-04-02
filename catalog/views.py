@@ -5,19 +5,19 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ProductModerationForm
 from catalog.models import Product, Version
 
 
 # Create your views here.
-class ProductListView(ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'catalog/product_list.html'
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(is_published=True)
         if not self.request.user.is_staff:
+            queryset = queryset.filter(is_published=True)
             queryset = queryset.filter(owner=self.request.user)
         return queryset
 
@@ -79,7 +79,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     redirect_field_name = "redirect_to"
 
     def get_object(self, queryset=None):
-        super().get_object(queryset)
+        self.object = super().get_object(queryset)
         if self.object.owner == self.request.user or self.request.user.has_perm('Catalog.change_product'):
             return self.object
         raise PermissionDenied
@@ -103,6 +103,16 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             return super().form_valid(form)
         else:
             return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
+
+class ProductModerationView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Product
+    form_class = ProductModerationForm
+    template_name = 'catalog/product_form.html'
+    permission_required = ('Catalog.set_published', 'Catalog.change_description', 'Catalog.change_category',)
+
+    def get_success_url(self):
+        return reverse_lazy('catalog:product_detail', kwargs={'pk': self.object.pk})
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):

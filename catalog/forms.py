@@ -19,7 +19,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
     # весь необходимый функционал, который нужно настроить
     class Meta:
         model = Product
-        exclude = ('created_at', 'updated_at', 'owner',)
+        exclude = ('created_at', 'updated_at', 'owner', 'is_published',)
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)
@@ -44,6 +44,12 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
                 raise forms.ValidationError('Ошибка в описании')
 
         return cleaned_data
+
+
+class ProductModerationForm(ProductForm):
+    class Meta:
+        model = Product
+        fields = ('category', 'description', 'is_published',)
 
 
 class VersionForm(StyleFormMixin, forms.ModelForm):
