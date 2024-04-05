@@ -6,9 +6,9 @@ from catalog.models import Product
 content_type = ContentType.objects.get_for_model(Product)
 catalog_permissions = [
     'view_product',
-    'add_product',
-    'change_product',
-    'delete_product',
+    # 'add_product',
+    # 'change_product',
+    # 'delete_product',
     'set_published',
     'change_description',
     'change_category'

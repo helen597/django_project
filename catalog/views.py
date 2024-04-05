@@ -23,6 +23,7 @@ class ProductListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
+        # products = Product.objects.all()
         products = self.get_queryset(*args, **kwargs)
 
         for product in products:
