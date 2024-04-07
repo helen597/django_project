@@ -7,7 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
 from catalog.forms import ProductForm, VersionForm, ProductModerationForm
-from catalog.models import Product, Version
+from catalog.models import Product, Version, Category
+from catalog.services import get_cached_categories
 from config import settings
 
 
@@ -146,6 +147,16 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('catalog:product_list')
     login_url = reverse_lazy('users:login')
     redirect_field_name = "redirect_to"
+
+
+class CategoryListView(LoginRequiredMixin, ListView):
+    model = Category
+    template_name = 'catalog/category_list.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data(*args, **kwargs)
+        context_data['object_list'] = get_cached_categories
+        return context_data
 
 
 class ContactsTemplateView(TemplateView):
