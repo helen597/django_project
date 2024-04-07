@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.shortcuts import render
@@ -7,6 +8,7 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView,
 
 from catalog.forms import ProductForm, VersionForm, ProductModerationForm
 from catalog.models import Product, Version
+from config import settings
 
 
 # Create your views here.
@@ -44,17 +46,40 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
-        product = self.get_object()
-        versions = Version.objects.filter(product=product)
-        # context_data['versions'] = versions
-        active_version = versions.filter(is_active=True).last()
 
-        if active_version:
-            product.active_version = active_version.name
+        if settings.CACHE_ENABLED:
+
+            key = f'product_{self.object.pk}'
+            product = cache.get(key)
+            if product is None:
+                product = self.get_object()
+                versions = Version.objects.filter(product=product)
+                active_version = versions.filter(is_active=True).last()
+                if active_version:
+                    product.active_version = active_version.name
+                else:
+                    product.active_version = 'Нет активной версии'
+                cache.set(key, product)
+
+            key = f'version_list_{self.object.pk}'
+            version_list = cache.get(key)
+            if version_list is None:
+                version_list = self.object.version_set.all()
+                cache.set(key, version_list)
+
         else:
-            product.active_version = 'Нет активной версии'
+            product = self.get_object()
+            versions = Version.objects.filter(product=product)
+            active_version = versions.filter(is_active=True).last()
+            if active_version:
+                product.active_version = active_version.name
+            else:
+                product.active_version = 'Нет активной версии'
+            version_list = self.object.version_set.all()
 
         context_data['object'] = product
+        context_data['version_list'] = version_list
+
         return context_data
 
 
