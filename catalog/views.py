@@ -48,35 +48,35 @@ class ProductDetailView(DetailView):
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
 
-        if settings.CACHE_ENABLED:
-
-            key = f'product_{self.object.pk}'
-            product = cache.get(key)
-            if product is None:
-                product = self.get_object()
-                versions = Version.objects.filter(product=product)
-                active_version = versions.filter(is_active=True).last()
-                if active_version:
-                    product.active_version = active_version.name
-                else:
-                    product.active_version = 'Нет активной версии'
-                cache.set(key, product)
-
-            key = f'version_list_{self.object.pk}'
-            version_list = cache.get(key)
-            if version_list is None:
-                version_list = self.object.version_set.all()
-                cache.set(key, version_list)
-
+        # if settings.CACHE_ENABLED:
+        #
+        #     key = f'product_{self.object.pk}'
+        #     product = cache.get(key)
+        #     if product is None:
+        #         product = self.get_object()
+        #         versions = Version.objects.filter(product=product)
+        #         active_version = versions.filter(is_active=True).last()
+        #         if active_version:
+        #             product.active_version = active_version.name
+        #         else:
+        #             product.active_version = 'Нет активной версии'
+        #         cache.set(key, product)
+        #
+        #     key = f'version_list_{self.object.pk}'
+        #     version_list = cache.get(key)
+        #     if version_list is None:
+        #         version_list = self.object.version_set.all()
+        #         cache.set(key, version_list)
+        #
+        # else:
+        product = self.get_object()
+        versions = Version.objects.filter(product=product)
+        active_version = versions.filter(is_active=True).last()
+        if active_version:
+            product.active_version = active_version.name
         else:
-            product = self.get_object()
-            versions = Version.objects.filter(product=product)
-            active_version = versions.filter(is_active=True).last()
-            if active_version:
-                product.active_version = active_version.name
-            else:
-                product.active_version = 'Нет активной версии'
-            version_list = self.object.version_set.all()
+            product.active_version = 'Нет активной версии'
+        version_list = self.object.version_set.all()
 
         context_data['object'] = product
         context_data['version_list'] = version_list
